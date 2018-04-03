@@ -5,6 +5,11 @@
  */
 package proyectopostgres;
 
+import java.sql.*;
+import javax.swing.JOptionPane; 
+import javax.swing.table.DefaultTableModel; 
+import java.util.ArrayList; 
+
 /**
  *
  * @author Gerardo Arturo Enriquez Capetillo
@@ -12,13 +17,102 @@ package proyectopostgres;
  */
 public class FormSeekSupplier extends javax.swing.JFrame {
 
+    private Connection connection;
+    private String user, password;
+    public String name, social, phone;
+    
     /**
      * Creates new form FormSeekSupplier
      */
     public FormSeekSupplier() {
         initComponents();
+        
+        connection = null;
+        user = "postgres";
+        password = "holamundo";
+                
+        openConnection(user,password);
+        if(connection != null)
+        {
+            cargaJTable("SELECT * FROM \"proveedor\"");
+            closeConnection();
+        }
     }
-
+    
+    public void openConnection(String u, String ps)
+    {
+        //Si ya hay una conexión solo retorna
+        if (connection != null)
+            return;
+        
+        //Cadena de Conexión a la BD
+        //Importante!!!! Verifica el nombre de la BD ↓
+        String url = "jdbc:postgresql://localhost:5432/Autos";
+        try
+        {
+            Class.forName("org.postgresql.Driver"); //Driver de conexión
+            //Intenta obtener la conexión con la BD
+            connection = DriverManager.getConnection(url, u, ps);
+            /* Puedes utilizar este código para verificar la conexión
+            if (connection != null) {
+                System.out.println("Conexión abierta");
+            }*/
+        } catch(Exception e){
+            System.out.println(e.getMessage()); //Si llega a existir algún error
+        }
+    }
+    
+    private void closeConnection()
+    {
+        try
+        {
+            if(connection!=null)
+            {
+                connection.close();
+                connection = null;      
+            }
+        }catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    private void cargaJTable(String query)
+    {
+        PreparedStatement ps;
+        ResultSet rs;
+        ResultSetMetaData rsm;
+        DefaultTableModel dtm;
+        try{
+            ps = connection.prepareStatement(query);
+            rs = ps.executeQuery();
+            rsm = rs.getMetaData();
+            ArrayList<Object[]> data = new ArrayList<>();
+           
+            while(rs.next())
+            {
+                Object[] rows = new Object[rsm.getColumnCount()];
+                for(int i = 0; i < rows.length; i ++)
+                {
+                    rows[i] = rs.getObject(i+1);
+                }
+                data.add(rows);
+            }
+           
+            dtm = (DefaultTableModel)this.jTable1.getModel();
+            dtm.setRowCount(0);
+            for(int i = 0; i < data.size(); i ++)
+            {
+                dtm.addRow(data.get(i));
+            }
+            rs.close();
+            ps.close();
+           
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(rootPane,e.getMessage());
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -39,6 +133,11 @@ public class FormSeekSupplier extends javax.swing.JFrame {
 
         jLabel1.setText("Nombre");
 
+        jTextPane1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextPane1KeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTextPane1);
         jTextPane1.getAccessibleContext().setAccessibleName("jTextPaneName");
 
@@ -57,6 +156,11 @@ public class FormSeekSupplier extends javax.swing.JFrame {
                 "Codigo", "Nombre", "Telefono", "Domicilio", "Razon Social", "Email"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -104,6 +208,19 @@ public class FormSeekSupplier extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextPane1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPane1KeyPressed
+        openConnection(user,password);
+        if(connection != null)
+        {
+            cargaJTable("SELECT * FROM \"proveedor\" WHERE Nombre LIKE '"+jTextPane1.getText()+"%'");
+            closeConnection();
+        }
+    }//GEN-LAST:event_jTextPane1KeyPressed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        //name = jTable1.get
+    }//GEN-LAST:event_jTable1MouseClicked
 
     /**
      * @param args the command line arguments

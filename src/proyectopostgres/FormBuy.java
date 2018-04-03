@@ -12,14 +12,11 @@ package proyectopostgres;
  */
 public class FormBuy extends javax.swing.JFrame 
 {
-    private PostgresConnection connection;
-    
     /**
      * Creates new form FormBuy
      */
     public FormBuy() {
         initComponents();
-        connection = new PostgresConnection("user", "root");
     }
 
     /**
@@ -255,7 +252,8 @@ public class FormBuy extends javax.swing.JFrame
      * @param evt 
      */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        FormSeekSupplier fs = new FormSeekSupplier();
+        fs.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
     
     /**
