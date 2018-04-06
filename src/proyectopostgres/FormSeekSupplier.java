@@ -19,7 +19,7 @@ public class FormSeekSupplier extends javax.swing.JFrame {
 
     private Connection connection;
     private String user, password;
-    public String name, social, phone;
+    public String name, social, phone, id;
     
     /**
      * Creates new form FormSeekSupplier
@@ -206,7 +206,18 @@ public class FormSeekSupplier extends javax.swing.JFrame {
      * @param evt 
      */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        try
+        {
+            id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+            name = jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString();
+            phone = jTable1.getValueAt(jTable1.getSelectedRow(), 2).toString();
+            social = jTable1.getValueAt(jTable1.getSelectedRow(), 4).toString();
+        }
+        catch(Exception e)
+        {
+             System.out.println(e.getMessage());     
+        }
+        this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextPane1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPane1KeyPressed
@@ -219,7 +230,15 @@ public class FormSeekSupplier extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextPane1KeyPressed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        //name = jTable1.get
+
+        id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        name = jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString();
+        phone = jTable1.getValueAt(jTable1.getSelectedRow(), 2).toString();
+        social = jTable1.getValueAt(jTable1.getSelectedRow(), 4).toString();
+        System.out.println(id);
+        System.out.println(name);
+        System.out.println(phone);
+        System.out.println(social);     
     }//GEN-LAST:event_jTable1MouseClicked
 
     /**
