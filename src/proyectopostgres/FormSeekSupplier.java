@@ -18,8 +18,8 @@ import java.util.ArrayList;
 public class FormSeekSupplier extends javax.swing.JFrame {
 
     private Connection connection;
-    private String user, password;
-    public String name, social, phone, id;
+    private String user, password, name, social, phone, id; 
+    private FormBuy buy;
     
     /**
      * Creates new form FormSeekSupplier
@@ -39,25 +39,38 @@ public class FormSeekSupplier extends javax.swing.JFrame {
         }
     }
     
+    public FormSeekSupplier(FormBuy formbuy) 
+    {
+        initComponents();
+        
+        connection = null;
+        user = "postgres";
+        password = "holamundo";
+        buy = formbuy;
+        
+        name = social = phone = "";
+        id = "1";
+        
+        openConnection(user,password);
+        if(connection != null)
+        {
+            cargaJTable("SELECT * FROM \"proveedor\"");
+            closeConnection();
+        }
+    }
+    
     public void openConnection(String u, String ps)
     {
-        //Si ya hay una conexión solo retorna
         if (connection != null)
             return;
-        
-        //Cadena de Conexión a la BD
-        //Importante!!!! Verifica el nombre de la BD ↓
         String url = "jdbc:postgresql://localhost:5432/Autos";
         try
         {
-            Class.forName("org.postgresql.Driver"); //Driver de conexión
-            //Intenta obtener la conexión con la BD
+            Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(url, u, ps);
-            /* Puedes utilizar este código para verificar la conexión
-            if (connection != null) {
-                System.out.println("Conexión abierta");
-            }*/
-        } catch(Exception e){
+        } 
+        catch(Exception e)
+        {
             System.out.println(e.getMessage()); //Si llega a existir algún error
         }
     }
@@ -71,7 +84,8 @@ public class FormSeekSupplier extends javax.swing.JFrame {
                 connection.close();
                 connection = null;      
             }
-        }catch(Exception e)
+        }
+        catch(Exception e)
         {
             System.out.println(e.getMessage());
         }
@@ -83,7 +97,8 @@ public class FormSeekSupplier extends javax.swing.JFrame {
         ResultSet rs;
         ResultSetMetaData rsm;
         DefaultTableModel dtm;
-        try{
+        try
+        {
             ps = connection.prepareStatement(query);
             rs = ps.executeQuery();
             rsm = rs.getMetaData();
@@ -98,17 +113,16 @@ public class FormSeekSupplier extends javax.swing.JFrame {
                 }
                 data.add(rows);
             }
-           
             dtm = (DefaultTableModel)this.jTable1.getModel();
             dtm.setRowCount(0);
             for(int i = 0; i < data.size(); i ++)
-            {
                 dtm.addRow(data.get(i));
-            }
             rs.close();
             ps.close();
            
-        }catch(Exception e){
+        }
+        catch(Exception e)
+        {
             JOptionPane.showMessageDialog(rootPane,e.getMessage());
         }
     }
@@ -130,6 +144,11 @@ public class FormSeekSupplier extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setText("Nombre");
 
@@ -217,6 +236,7 @@ public class FormSeekSupplier extends javax.swing.JFrame {
         {
              System.out.println(e.getMessage());     
         }
+        buy.SetVal(id, name, phone, social);
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -240,6 +260,10 @@ public class FormSeekSupplier extends javax.swing.JFrame {
         System.out.println(phone);
         System.out.println(social);     
     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        this.setVisible(false);
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

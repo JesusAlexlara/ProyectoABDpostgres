@@ -379,6 +379,7 @@ public class FormBuy extends javax.swing.JFrame
                 "Nombre", "Razon Social", "Telefono", "No Serie", "FechaCompra"
             }
         ));
+        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jScrollPane5.setViewportView(jTable1);
 
         jLabel11.setText("Compras");
@@ -494,6 +495,14 @@ public class FormBuy extends javax.swing.JFrame
         }
     }
     
+    public void SetVal(String id, String name, String phone, String social)
+    {
+        jLabel2.setText("Nombre: " + name);
+        jLabel3.setText("Telefono: " + phone);
+        jLabel4.setText("Razon Social: " + social);
+        idSupplier = id;
+    }
+    
     /**
      * Evento del boton "Aceptar".
      * Efectua la consulta SQL para insertar una nueva compra.
@@ -518,12 +527,9 @@ public class FormBuy extends javax.swing.JFrame
      * @param evt 
      */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        FormSeekSupplier fs = new FormSeekSupplier();
+        FormSeekSupplier fs = new FormSeekSupplier(this);
         fs.setVisible(true);
-        fs.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        jLabel2.setText("Nombre: " + fs.name);
-        jLabel3.setText("Telefono: " + fs.phone);
-        jLabel4.setText("Razon Social: " + fs.social);
+        fs.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);       
     }//GEN-LAST:event_jButton1ActionPerformed
     
     /**
