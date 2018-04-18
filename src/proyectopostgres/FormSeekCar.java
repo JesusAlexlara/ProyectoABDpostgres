@@ -73,12 +73,13 @@ public class FormSeekCar extends javax.swing.JFrame {
         ResultSet rs;
         ResultSetMetaData rsm;
         DefaultTableModel dtm;
-        String query = "";
+        String values = "noserie, precioventa, modelo, marca, nombre, preciofabrica, cantidad";
+        String query;
         try{
             if(search.equals(""))
-                query = "SELECT * FROM \"auto\"";
+                query = "SELECT " + values + " FROM \"instancia_auto\", \"auto\" WHERE \"instancia_auto\".idAuto = \"auto\".idAuto";
             else
-                query = "SELECT * FROM \"auto\" WHERE nombre LIKE '" + search + "%'";
+                query = "SELECT " + values + " FROM \"auto\" WHERE WHERE \"instancia_auto\".idAuto = \"auto\".idAuto AND nombre LIKE '" + search + "%'";
             ps = connection.prepareStatement(query);
             rs = ps.executeQuery();
             rsm = rs.getMetaData();
@@ -143,11 +144,11 @@ public class FormSeekCar extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Numero de Serie", "Modelo", "Marca", "Nombre", "Precio de Fabrica", "Cantidad"
+                "Numero de Serie", "Precio de Venta", "Modelo", "Marca", "Nombre", "Precio de Fabrica", "Cantidad"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -196,10 +197,10 @@ public class FormSeekCar extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         parent.setNumeroSerie(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString());
-        parent.setNombreAuto(jTable1.getValueAt(jTable1.getSelectedRow(), 3).toString());
-        parent.setMarca(jTable1.getValueAt(jTable1.getSelectedRow(), 2).toString());
-        parent.setModelo(jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString());
-        parent.setPrecioAuto(jTable1.getValueAt(jTable1.getSelectedRow(), 4).toString());
+        parent.setNombreAuto(jTable1.getValueAt(jTable1.getSelectedRow(), 4).toString());
+        parent.setMarca(jTable1.getValueAt(jTable1.getSelectedRow(), 3).toString());
+        parent.setModelo(jTable1.getValueAt(jTable1.getSelectedRow(), 2).toString());
+        parent.setPrecioAuto(jTable1.getValueAt(jTable1.getSelectedRow(), 5).toString());
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void bSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bSearchActionPerformed

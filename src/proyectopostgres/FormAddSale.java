@@ -5,9 +5,11 @@
  */
 package proyectopostgres;
 import java.sql.*; //Clases de conexión a la BD
+import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane; //Clase para manejo de formas
 import javax.swing.table.DefaultTableModel; //Clase para el manejo de JTable
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  *
@@ -106,11 +108,20 @@ public class FormAddSale extends javax.swing.JFrame {
             try{
                 Statement st;
                 st = connection.createStatement();
+                String query;
+                Calendar cal = Calendar.getInstance(); 
+                cal.getTime(); 
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String fecha = sdf.format(cal.getTime());
                 
-                String query = "INSERT";
-                
-                System.out.println(query);
-                
+                if(cbPaymentType.getSelectedIndex() == 1)
+                {
+                   query = "INSERT INTO \"venta\" (idcliente, idagente, noserie, fechaventa, montototal, noexhibiciones, adeudo, tipoventa) VALUES (" + idCliente + ", " + "1, " + numeroSerie + ", '" + fecha + "', " + tbFinalPrice.getText() + ", " + nudExhibitionNumber.getValue().toString() + ", 1, 'Credito')";
+                }
+                else
+                {
+                    query = "INSERT INTO \"venta\" (idcliente, idagente, noserie, fechaventa, montototal, noexhibiciones, adeudo, tipoventa) VALUES (" + idCliente + ", " + "1, " + numeroSerie + ", '" + fecha + "', " + tbFinalPrice.getText() + ", 1, 1, 'Contado')";
+                }
                 st.executeUpdate(query);
                 st.close();
                 closeConnection();//Cierra la conexión
